@@ -1,13 +1,34 @@
 import React from 'react';
-import Hello from './Hello.jsx';
-import Info from './Info.jsx';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect
+} from "react-router-dom";
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import AuthenticatedRoute from '../AuthenticatedRoute';
 
-const App = () => (
-  <div>
-    <h1>Welcome to Meteor!</h1>
-    <Hello />
-    <Info />
-  </div>
-);
+const App = () => {
+    handleMeteorLogout = () => {
+        Meteor.logout();
+        return <Redirect to="/login" push />
+    };
+    return (
+        <Router>
+            <Switch>
+                <Route path="/logout" render={handleMeteorLogout} />
+                <Route path="/register" component={Register} />
+                <Route path="/login" component={Login} />
+                <AuthenticatedRoute
+                    checkType="checkIsLoggedIn"
+                    path="/"
+                    component={Home}
+                />
+            </Switch>
+        </Router>
+    )
+};
 
 export default App;
